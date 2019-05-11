@@ -10,13 +10,13 @@
           <nav class="nav-content">
             <ul class="nav-list">
               <li class="li-first">
-                <div class="phone-show">
-                  <span>首页</span>
+                <div class="phone-show" @click="navListToggle" >
+                  <span class="nav-title">{{navTitle}}</span>
                   <span class="iconfont">&#xe771;</span>
                 </div>
-                <ul class="phone-hide">
+                <ul class="phone-hide" :class="phoneHideFlag == true ? phoneHideClass : ''">
                   <li class="nav-item" v-for="(item , index) in navList" :key="item.title"
-                    @click="changeNavColor(index)">
+                    @click="changeNavColor(index,item.title)">
                     <a v-text="item.title" :class="navIndex == index ? colorStyle : ''"></a>
                   </li>
                 </ul>
@@ -84,15 +84,22 @@
         }, {
           tag: 'webpack',
           id: '6'
-        }]
+        }],
+        navTitle:'首页',
+        phoneHideFlag:false,
+        phoneHideClass:'phoneHideClass'
       }
     },
     methods: {
-      changeNavColor(index) {
+      changeNavColor(index,title) {
         this.navIndex = index;
+        this.navTitle = title;
       },
       changeTagColor(index) {
         this.tagIndex = index;
+      },
+      navListToggle(){
+        this.phoneHideFlag = !this.phoneHideFlag;
       }
     },
 
@@ -101,22 +108,21 @@
 </script>
 
 <style scoped>
-  .header-box {
-    position: relative;
-    height: 5rem;
-  }
-
-  .header-content {
+  .header{
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    border-bottom: 1px solid rgb(243, 240, 240);
     height: 5rem;
     z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid rgb(245, 242, 242);
   }
-
+  .header-box {
+    position: relative;
+    height: 5rem;
+  }
   .content {
     position: relative;
     margin: 0 auto;
@@ -130,7 +136,7 @@
   .logo {
     height: 5rem;
     line-height: 5rem;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     margin-right: 2rem;
     display: flex;
     align-items: center;
@@ -174,6 +180,12 @@
     cursor: pointer;
   }
 
+  .phone-show .nav-title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .phone-show .iconfont {
     font-size: 1.5rem;
     margin-left: -.4rem;
@@ -199,7 +211,7 @@
 
   .nav-item a {
     color: #71777c;
-    font-size: 1.6rem;
+    font-size: 1.33rem;
   }
 
   .colorStyle {
@@ -210,7 +222,7 @@
     flex: 1 1 auto;
     justify-content: flex-end;
     cursor: auto;
-    z-index: 101;
+    z-index: 90;
   }
 
   .input-search {
@@ -246,17 +258,20 @@
     left: 0;
     width: 100%;
     height: 3.833rem;
-    z-index: 99;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+    z-index: 10;
+    box-shadow: 0px 2px 5px rgb(199, 198, 198);
     transition: all .2s;
     transform: translateZ(0);
     overflow: hidden;
+    background: #fff;
+    margin-top: 1px;
+
   }
 
   .tag-list {
     position: relative;
     max-width: 960px;
-    height: 110%;
+    height: 100%;
     margin: auto;
     display: flex;
     align-items: center;
@@ -269,7 +284,7 @@
     align-items: center;
     display: flex;
     flex-shrink: 0;
-    font-size: 1.4rem;
+    font-size: 1.33rem;
     color: #71777c;
     padding: 0 1rem;
     cursor: pointer;
@@ -279,14 +294,16 @@
     color: rgb(69, 167, 212);
   }
 
+
   @media screen and (max-width:980px) {
     .li-first {
       display: block;
       position: absolute;
       left: -15px;
-      top: 0;
+      top: -6px;
       background-color: #fff;
-      z-index: 1;
+      z-index: 99;
+      margin-left: -10px;
     }
 
     .phone-show {
@@ -305,14 +322,14 @@
     }
 
     .phone-hide {
-      display: block;
+      display: block !important;
       background-color: #fff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
       border: 1px solid rgba(177, 180, 185, .45);
       border-radius: 4px;
       font-size: 1.2rem;
       background: #fff;
-      z-index: 101;
+      z-index: 99;
     }
 
     .nav-item {
@@ -325,7 +342,8 @@
     }
 
     .name {
-      display: none;
+      display: block;
+      margin-right: 2rem!important;
     }
 
     .input {
@@ -348,15 +366,25 @@
       font-size: 1.33rem !important;
     }
   }
+  @media screen and (max-width:700px) {
+    .name{
+      display: none;
+    }
+  }
+  @media screen and (max-width:500px) {
+    .phone-show{
+      margin-left: 1rem;
+    }
+  }
 
   @media screen and (max-width:330px) {
     .li-first {
       display: block;
       position: absolute;
-      left: -15px;
-      top: 0;
+      left: 0;
+      top: -6px;
       background-color: #fff;
-      z-index: 1;
+      z-index: 99;
       overflow: hidden;
     }
 
@@ -372,13 +400,13 @@
     }
 
     .phone-hide {
-      display: block;
+      display: block!important;
       background-color: #fff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
       border: 1px solid rgba(177, 180, 185, .45);
       border-radius: 4px;
       background: #fff;
-      z-index: 101;
+      z-index: 99;
     }
     .nav-item a{
       font-size: 1.33rem ;
@@ -395,6 +423,10 @@
     .search {
       display: none;
     }
+  }
+
+  .phoneHideClass{
+    display: none !important;
   }
 
 </style>
