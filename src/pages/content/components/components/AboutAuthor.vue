@@ -5,20 +5,21 @@
     </div>
     <div class="author-img">
       <div class="box-img">
-        <img src="../../../../../static/Davi.jpg" alt="">
+        <img :src="author.imgSrc" alt="">
       </div>
     </div>
     <div class="author-name">
-      <span>Darcy</span>
+      <span v-text="author.name"></span>
     </div>
-    <div class="author-sign" title="后端搬砖 业余前端">
-      <span>后端搬砖 业余前端</span>
+    <div class="author-sign" title="author.sign">
+      <span v-text="author.sign"></span>
     </div>
     <div class="author-meta">
       <ul>
-        <li><span>文章</span><strong>10</strong></li>
-        <li class="action-item"><span>评论</span><strong>5</strong></li>
-        <li class="action-item"><span>浏览</span><strong>1110</strong></li>
+        <li><span>文章</span><strong>{{author.articleNum}}</strong></li>
+        <li><span>点赞</span><strong>{{author.agreeNum}}</strong></li>
+        <li class="action-item"><span>评论</span><strong>{{author.commentsNum}}</strong></li>
+        <li class="action-item"><span>浏览</span><strong>{{author.readNum}}</strong></li>
       </ul>
     </div>
   </div>
@@ -26,6 +27,25 @@
 
 <script>
   export default {
+    created(){
+      this.getAuthor();
+    },
+    data(){
+      return{
+        author:{},
+      }
+    },
+    methods: {
+      getAuthor(){
+        this.axios('/getAuthorInfo').then(res=>{
+          console.log(res);
+          let data = res.data;
+          if(data.code == 200){
+            this.author = data.data;
+          }
+        })
+      }
+    },
 
   }
 

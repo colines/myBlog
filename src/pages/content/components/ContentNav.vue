@@ -4,54 +4,70 @@
       <nav class="nav">
         <ul>
           <li v-for="(item,index) in navList" :class="navIndex == index ? colorStyle : ''" @click="changeColorStyle(index)">
-            <span v-text="item"></span>
+            <span v-text="item.type" @click="getContenList(item.status)"></span>
           </li>
         </ul>
       </nav>
-
     </div>
-   <div class="content-list">
-      <ul>
-        <li>
-            <a href="">
-              <div class="content-box">
-                <div class="info-box">
-                  <div class="meta-info">
-                    <span class="time">1小时前</span>
-                    <span>javascript</span>
-                  </div>
-                  <div class="title-info">
-                    <span>vue的响应式原理</span>
-                  </div>
-                  <div class="action-info">
-                    <ul>
-                      <li><span class="iconfont">&#xe60c;</span><span>10</span></li>
-                      <li class="action-item"><span class="iconfont">&#xe684;</span><span>5</span></li>
-                      <li class="action-item"><span class="iconfont">&#xe605;</span><span>1110</span></li>
-                      <li class="action-item"><span class="iconfont">&#xe61d;</span></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </li>
-      </ul>
-    </div>
+    <content-list :contentList="contentList"></content-list>
   </div>
 </template>
 
 <script>
+  import ContentList from './components/ContentList'
   export default {
+    components:{
+      ContentList
+    },
+    created() {
+      this.getContentHot();
+    },
     data(){
       return{
-        navList:['热门','最新','评论'],
+        navList:[{type:'热门',status:0},{type:'最新',status:1},{type:'评论',status:2}],
         navIndex:0,
         colorStyle:'colorStyle',
+        contentList:[],
       }
     },
     methods: {
       changeColorStyle(index){
         this.navIndex = index;
+      },
+      getContenList(status){
+        switch(status){
+          case 0:this.getContentHot();break;
+          case 1:this.getContentNew();break;
+          case 2:this.getContentComments();break;
+        }
+
+      },
+      getContentNew(){
+        this.axios('/getContentListNew').then(res=>{
+          console.log(res);
+          let data= res.data;
+          if(data.code == 200){
+            this.contentList = data.data;
+          }
+        })
+      },
+      getContentHot(){
+        this.axios('/getContentListHot').then(res=>{
+          console.log(res);
+          let data= res.data;
+          if(data.code == 200){
+            this.contentList = data.data;
+          }
+        })
+      },
+      getContentComments(){
+        this.axios('/getContentListComments').then(res=>{
+          console.log(res);
+          let data= res.data;
+          if(data.code == 200){
+            this.contentList = data.data;
+          }
+        })
       }
     },
 
@@ -70,7 +86,6 @@
     width: 700px;
     box-shadow: 0px 2px 5px rgb(199, 198, 198);
   }
-
   .content-header {
     padding: 1.2rem 1rem 2.2rem 1rem;
     border-bottom: 1px solid hsla(0,0%,59.2%,.1); 
@@ -90,76 +105,4 @@
   .content-header ul li:hover{
     color:rgb(69, 167, 212);
   }
-
-  .content-list{
-    width: 100%;
-    background: #fff;
-  }
-
-  .content-list ul li{
-    border-bottom: 1px solid hsla(0,0%,59.2%,.1);
-  }
-  .content-list ul li:hover{
-    background: rgb(250, 249, 249);
-  }
-  .content-box{
-    display: flex;
-    padding:1.5rem 2.4rem;
-    align-items: center;
-  }
-  .info-box{
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .meta-info{
-    font-size: 1rem;
-    color: #b2bac2;
-  }
-  .time::after{
-    content: "·";
-    color: rgb(178, 186, 194);
-    margin: 0px 0.4em;
-  }
-  .title-info{
-    margin: .8rem 0 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .title-info span{
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #2e3135;
-  }
-
-  .title-info span:hover{
-    text-decoration: underline;
-  }
-
-  .action-info ul li{
-    float: left;
-    padding: 0 .8rem;
-    height: 2rem;
-    font-size: 1.083rem;
-    line-height: 2rem;
-    white-space: nowrap;
-    color: #b2bac2;
-    border-radius: 1px;
-    border: 1px solid #edeeef; 
-  }
-
-  .action-info ul li span{
-    margin-right: .5rem;
-  }
-  .action-item{
-    margin-left: -1px;
-  }
-
-
-
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="content-right">
     <about-author></about-author>
-    <leave-words></leave-words>
+    <comments-new></comments-new>
     <links></links>
   </div>
   </div>
@@ -9,12 +9,12 @@
 
 <script>
   import AboutAuthor from './components/AboutAuthor'
-  import LeaveWords from './components/LeaveWords'
+  import CommentsNew from './components/CommentsNew'
   import Links from './components/Links'
   export default {
     components: {
       AboutAuthor,
-      LeaveWords,
+      CommentsNew,
       Links
     }
 
