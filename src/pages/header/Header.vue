@@ -29,19 +29,12 @@
               </li>
               <li class="message nav-item">
                 <span class="iconfont">&#xe642;</span>
-                <a href="/">留言本</a>
+                <router-link to="/leavewords" target="_blank">留言本</router-link>
               </li>
             </ul>
           </nav>
         </div>
       </header>
-      <nav class="tag-nav" v-if="tagList.length">
-        <ul class="tag-list">
-          <li class="tag-item" v-for="(item,index) in tagList" :key="item.id" @click=changeTagColor(index)>
-            <span v-text="item.tag" :class="tagIndex == index ? colorStyle :''"></span>
-          </li>
-        </ul>
-      </nav>
     </div>
   </div>
 </template>
@@ -64,27 +57,7 @@
           title: '项目总结'
         }],
         navIndex: 0,
-        tagIndex: 0,
         colorStyle: 'colorStyle',
-        tagList: [{
-          tag: 'javascript',
-          id: '1'
-        }, {
-          tag: 'css',
-          id: '2'
-        }, {
-          tag: 'html',
-          id: '3'
-        }, {
-          tag: 'vue',
-          id: '4'
-        }, {
-          tag: 'react',
-          id: '5'
-        }, {
-          tag: 'webpack',
-          id: '6'
-        }],
         navTitle:'首页',
         phoneHideFlag:false,
         phoneHideClass:'phoneHideClass'
@@ -94,9 +67,6 @@
       changeNavColor(index,title) {
         this.navIndex = index;
         this.navTitle = title;
-      },
-      changeTagColor(index) {
-        this.tagIndex = index;
       },
       navListToggle(){
         this.phoneHideFlag = !this.phoneHideFlag;
@@ -252,49 +222,6 @@
     color: rgb(199, 199, 181);
   }
 
-  .tag-nav {
-    position: fixed;
-    top: 5rem;
-    left: 0;
-    width: 100%;
-    height: 3.833rem;
-    z-index: 10;
-    box-shadow: 0px 2px 5px rgb(199, 198, 198);
-    transition: all .2s;
-    transform: translateZ(0);
-    overflow: hidden;
-    background: #fff;
-    margin-top: 1px;
-
-  }
-
-  .tag-list {
-    position: relative;
-    max-width: 960px;
-    height: 100%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    line-height: 1;
-    overflow-y: hidden;
-  }
-
-  .tag-item {
-    height: 100%;
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    font-size: 1.33rem;
-    color: #71777c;
-    padding: 0 1rem;
-    cursor: pointer;
-  }
-
-  .tag-item:hover {
-    color: rgb(69, 167, 212);
-  }
-
-
   @media screen and (max-width:980px) {
     .li-first {
       display: block;
@@ -315,6 +242,7 @@
       justify-content: center;
       padding: 0;
       width: 5.66rem;
+      margin-left: 1rem;
     }
 
     .phone-show .iconfont {

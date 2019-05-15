@@ -10,8 +10,8 @@
   import ContentRight from './components/ContentRight'
   export default {
     components: {
-      'content-nav':ContentNav,
-      'content-right':ContentRight
+      'content-nav': ContentNav,
+      'content-right': ContentRight
     }
 
   }
@@ -19,11 +19,11 @@
 </script>
 
 <style scoped>
-    .content{
-        z-index: 1;
-        margin-top: 11rem;
-        display: flex;
-        max-width: 960px;
-    }
+  .content {
+    z-index: 1;
+    margin-top: 11rem;
+    display: flex;
+    max-width: 960px;
+  }
 
 </style>

@@ -27,11 +27,18 @@
     position: absolute;
     top: 0;
     right: 0;
+    display: block;
   }
 
   .author {
     width: 240px;
     height: 100px;
+  }
+
+  @media screen and (max-width:980px) {
+    .content-right{
+      display:none;
+    }
   }
 
 </style>

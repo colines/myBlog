@@ -5,13 +5,13 @@
     </div>
     <div class="author-img">
       <div class="box-img">
-        <img :src="author.imgSrc" alt="">
+        <img :src="author.imgSrc" alt="个人头像">
       </div>
     </div>
     <div class="author-name">
       <span v-text="author.name"></span>
     </div>
-    <div class="author-sign" title="author.sign">
+    <div class="author-sign" :title="author.sign">
       <span v-text="author.sign"></span>
     </div>
     <div class="author-meta">

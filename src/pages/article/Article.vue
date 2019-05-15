@@ -12,7 +12,7 @@
     methods: {
         getArticleById(){
             let aid = this.$route.query.aid;
-            this.axios('/getArticleById',this.$qs.stringify(aid)).then(res=>{
+            this.axios('/ getArticleById',this.$qs.stringify(aid)).then(res=>{
                 console.log(res);
             })
         }

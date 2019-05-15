@@ -1,31 +1,30 @@
 <template>
-  <div class="content-nav">
-    <div class="content-list">
-      <ul>
-        <li v-for=" item in list" :key="item.id" @click="getArticle(item.id)">
-          <div class="content-box">
-            <div class="info-box">
-              <div class="meta-info">
-                <span class="time" v-text="item.date"></span>
-                <span v-text="item.tagName"></span>
-              </div>
-              <div class="title-info">
-                <span v-text="item.title"></span>
-              </div>
-              <div class="action-info">
-                <ul>
-                  <li><span class="iconfont">&#xe60c;</span><span v-text="item.agreenNum"></span></li>
-                  <li class="action-item"><span class="iconfont">&#xe684;</span><span v-text="item.commentsNum"></span>
-                  </li>
-                  <li class="action-item"><span class="iconfont">&#xe605;</span><span v-text="item.readNum"></span></li>
-                  <li class="action-item"><span class="iconfont">&#xe61d;</span></li>
-                </ul>
-              </div>
+  <div class="content-list">
+    <ul>
+      <li v-for=" item in list" :key="item.id" @click="getArticle(item.id)">
+        <div class="content-box">
+          <div class="info-box">
+            <div class="meta-info">
+              <span class="time" v-text="item.date"></span>
+              <span v-text="item.tagName"></span>
+            </div>
+            <div class="title-info">
+              <span v-text="item.title"></span>
+            </div>
+            <div class="action-info">
+              <ul>
+                <li @click.stop="addAgreeNum(item.id,$event)"><span class="iconfont">&#xe60c;</span><span
+                    v-text="item.agreenNum"></span></li>
+                <li class="action-item"><span class="iconfont">&#xe684;</span><span v-text="item.commentsNum"></span>
+                </li>
+                <li class="action-item"><span class="iconfont">&#xe605;</span><span v-text="item.readNum"></span></li>
+                <li @click="shareArticle" class="action-item"><span class="iconfont">&#xe61d;</span></li>
+              </ul>
             </div>
           </div>
-        </li>
-      </ul>
-    </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -51,6 +50,12 @@
           }
         });
         window.open(routeData.href, '_blank');
+      },
+      addAgreeNum(id, event) {
+        alert(id);
+      },
+      shareArticle() {
+        
       }
     },
 
@@ -59,14 +64,6 @@
 </script>
 
 <style scoped>
-  .content-nav {
-    display: block;
-    margin-right: 260px;
-    background: #fff;
-    width: 700px;
-    box-shadow: 0px 2px 5px rgb(199, 198, 198);
-  }
-
   .content-list {
     width: 100%;
     background: #fff;
@@ -113,7 +110,7 @@
   }
 
   .title-info span {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 600;
     line-height: 1.2;
     color: #2e3135;
@@ -141,6 +138,12 @@
 
   .action-item {
     margin-left: -1px;
+  }
+
+  @media screen and (max-width:980px) {
+    .title-info span{
+      font-size: 1.4rem;
+    }
   }
 
 </style>
