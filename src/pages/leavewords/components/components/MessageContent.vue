@@ -34,14 +34,14 @@
     </div>
     <div class="pages">
       <ul>
-        <li>
-          <span class="page-item">上一页</span>
+        <li @click="pagePre">
+          <span class="page-item" :class="currentPage == 1 ? disabled :''">上一页</span>
         </li>
-        <li v-for="(item,index) in pages" @click="changeStyle(index)">
+        <li v-for="(item,index) in endPage" @click="changeCurrent(item)" v-show="item >= startPage">
           <span class="page-item" :class="index == pageIndex ? activeClass : ''">{{item}}</span>
         </li>
-        <li>
-          <span class="page-item">下一页</span>
+        <li @click="pageNext">
+          <span class="page-item" :class="currentPage == pages ? disabled :''">下一页</span>
         </li>
       </ul>
     </div>
@@ -54,14 +54,49 @@
     data() {
       return {
         pageIndex: 0,
-        pages: 5,
-        activeClass: 'active'
+        pages: 8,
+        pageNum: 5,
+        currentPage: 1,
+        startPage: 1,
+        activeClass: 'active',
+        disabled: 'disabled'
+      }
+    },
+    computed: {
+      endPage: function () {
+        if (this.pageNum >= this.pages)
+          return this.pages;
+        if (this.startPage + this.pageNum - 1 >= this.pages) {
+          return this.pages;
+        }
+        return this.startPage + this.pageNum - 1;
       }
     },
     methods: {
-      changeStyle(index) {
-        this.pageIndex = index;
-      }
+      changeCurrent(item) {
+        this.pageIndex = item - 1;
+        this.currentPage = item;
+      },
+      pagePre() {
+        if (this.currentPage > 1) {
+          if (this.currentPage == this.startPage) {
+            this.startPage--;
+          }
+          this.currentPage--;
+          this.pageIndex = this.currentPage - 1;
+        }
+      },
+      pageNext() {
+        if (this.pages > this.currentPage) {
+          this.currentPage++;
+          this.pageIndex = this.currentPage - 1;
+          if (this.currentPage > this.endPage) {
+            this.startPage++;
+          }
+        } else {
+
+        }
+      },
     },
 
   }
@@ -125,6 +160,13 @@
     color: #ffffff;
     background-color: rgb(54, 144, 207);
     border: 1px solid #3690cf;
+  }
+
+  .disabled {
+    cursor: no-drop;
+    background-color: #eee !important;
+    color: #666 !important;
+    border:1px solid #eee !important;
   }
 
   @media screen and (max-width:980px) {

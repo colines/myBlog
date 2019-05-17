@@ -100,6 +100,7 @@
     border-radius: 5px;
     background: #3690cf;
     color: #fff;
+    cursor: pointer;
   }
 
   @media screen and (max-width:980px) {
