@@ -15,6 +15,12 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  externals:{
+    'vue': 'Vue',
+    'axios': 'axios',
+    'ClipboardJS':'clipboard'
+
+  },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

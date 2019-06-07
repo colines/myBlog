@@ -1,41 +1,58 @@
 <template>
   <div class="leave-words">
     <div class="words-header">
-      <span>最新评论</span>
+      <span>最新留言</span>
     </div>
     <div class="words-list">
-      <ul>
-        <li v-for="item in commentsList" :key="item.id">
-          <p class="nick-name" v-text="item.nickName"></p>
-          <p class="word" v-text="item.content"></p>
-          <span class="date" v-text="item.date"></span>
+      <a-comment v-for="(item,index) in commentsList" :key="item.guestbookId" v-if="index < 7" class="comment">
+        <a slot="author">{{Utils.html_decode(item.userName)}}</a>
+        <a-avatar
+          :src="item.imageUrl"
+          alt="Han Solo" slot="avatar" />
+        <a-tooltip slot="content" :title="Utils.html_decode(item.guestbookContent)">
+          <span class="user-words">
+            {{Utils.html_decode(item.guestbookContent)}}
+          </span>
+        </a-tooltip>
+        <a-tooltip slot="datetime" :title="moment(item.updateTime).format('YYYY-MM-DD HH:mm:ss')">
+          <span>{{moment(item.updateTime).fromNow()}}</span>
+        </a-tooltip>
+      </a-comment>
+      <!-- <ul>
+        <li v-for="(item,index) in commentsList" :key="item.guestbookId" v-if="index < 8">
+          <p class="nick-name">{{Utils.html_decode(item.userName)}}</p>
+          <a-tooltip slot="content" :title="Utils.html_decode(item.guestbookContent)">
+            <p class="word">{{Utils.html_decode(item.guestbookContent)}}</p>
+          </a-tooltip>
+          <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')" class="date">
+            <span>{{moment(item.updateTime).fromNow()}}</span>
+          </a-tooltip>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </template>
 
 <script>
   export default {
-      created() {
-          this.getCommentsList();
-      },
-      data(){
-          return{
-              commentsList:[],
+    created() {
+      this.getCommentsList();
+    },
+    data() {
+      return {
+        commentsList: [],
+      }
+    },
+    methods: {
+      getCommentsList() {
+        this.axios.get('/user/guestBook?pageNum=1').then(res => {
+          console.log(res);
+          if (res.data.code == 0) {
+            this.commentsList = res.data.data.list;
           }
-      },
-      methods: {
-          getCommentsList(){
-              this.axios.get('/getCommentsNew').then(res=>{
-                  console.log(res);
-                  let data = res.data;
-                if(data.code == 200){
-                    this.commentsList = data.data;
-                }
-              })
-          }
-      },
+        })
+      }
+    },
 
   }
 
@@ -44,11 +61,11 @@
 <style scoped>
   .leave-words {
     width: 20rem;
-    height: 24.42rem;
     box-shadow: 0px 2px 5px rgb(199, 198, 198);
     margin: 2rem 0;
     background: #fff;
     overflow: hidden;
+    border-radius: 2px;
   }
 
   .words-header {
@@ -78,11 +95,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .words-list ul li span{
-      position: absolute;
-      top:.5rem;
-      right: 2rem;
-      color: #999;
+
+  .words-list ul li span {
+    position: absolute;
+    top: .5rem;
+    right: 2rem;
+    color: #999;
   }
 
   .nick-name {
@@ -98,6 +116,9 @@
   .words-list ul li .word:hover {
     color: rgb(69, 167, 212);
     cursor: pointer;
+  }
+  .comment{
+    margin-left: 1rem;
   }
 
 </style>

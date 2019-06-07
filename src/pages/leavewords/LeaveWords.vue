@@ -1,33 +1,21 @@
 <template>
   <div class="container">
-    <Header></Header>
     <Message></Message>
-    <ContentRight></ContentRight>
-
+    <SideBar></SideBar>
+  </div>
   </div>
 </template>
 
 <script>
-  import Header from '@/pages/header/Header'
-  import Message from '@/pages/leavewords/components/Message'
-  import ContentRight from '@/pages/common/ContentRight'
+  import Message from './components/Message'
+  import SideBar from './components/SideBar'
+
   export default {
     components: {
-      Header,
       Message,
-      ContentRight,
+      SideBar,
     }
 
   }
 
 </script>
-
-<style scoped>
-  .container {
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 960px;
-  }
-
-</style>

@@ -5,13 +5,13 @@
     </div>
     <div class="article-list">
       <ul>
-        <li v-for="item in itemList" :key="item.id">
-          <div class="title" :title="item.title" v-text="item.title">
+        <li v-for="item in itemList" :key="item.articleId" @click="getArticle(item.articleId)">
+          <div class="title" :title="item.articleTitle" v-text="item.articleTitle">
           </div>
           <div class="meta-box">
-            <p><span class="iconfont">&#xe60c;</span><span v-text="item.agreeNum" class="num-item"></span></p>
-            <p><span class="iconfont">&#xe684;</span><span v-text="item.commentsNum" class="num-item"></span></p>
-            <p><span class="iconfont">&#xe605;</span><span v-text="item.readNum" class="num-item"></span></p>
+            <p><span class="iconfont">&#xe60c;</span><span v-text="item.thumbupCount" class="num-item"></span></p>
+            <p><span class="iconfont">&#xe684;</span><span v-text="item.commentCount" class="num-item"></span></p>
+            <p><span class="iconfont">&#xe605;</span><span v-text="item.visitCount" class="num-item"></span></p>
           </div>
           <div class="clear-fix"></div>
         </li>
@@ -22,24 +22,41 @@
 
 <script>
   export default {
-    props:['list'],
-    created() {
+    props: ['list'],
+    mounted() {
       this.getData();
     },
     data() {
       return {
-        articleType:'',
-        itemList:[],
+        articleType: '',
+        itemList: [],
         commentsList: [],
       }
     },
     methods: {
-      getCommentsList() {
-        
+      getArticle(articleId){
+        let routeData = this.$router.resolve({
+          path: "/article",
+          query: {
+            aid: articleId
+          }
+        });
+        window.open(routeData.href, '_blank');
       },
-      getData(){
+      getCommentsList() {
+
+      },
+      getData() {
+        if (this.list) {
+          this.articleType = this.list.articleType;
+          this.itemList = this.list.list;
+        }
+      }
+    },
+    watch: {
+      list: function (newVal, oldVal) {
         this.articleType = this.list.articleType;
-        this.itemList = this.list.list;
+        this.itemList = newVal.list;
       }
     },
 
@@ -94,7 +111,7 @@
 
   .meta-box p {
     float: left;
-    width:22%;
+    width: 22%;
     padding: .4rem .5rem;
     color: #666;
     margin-right: .5rem;

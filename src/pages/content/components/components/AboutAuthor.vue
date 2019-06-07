@@ -5,23 +5,24 @@
     </div>
     <div class="author-img">
       <div class="box-img">
-        <img :src="author.imgSrc" alt="个人头像">
+        <img :src="author.imageUrl" alt="">
       </div>
     </div>
     <div class="author-name">
       <span v-text="author.name"></span>
     </div>
-    <div class="author-sign" :title="author.sign">
-      <span v-text="author.sign"></span>
+    <div class="author-sign" :title="author.userSignature">
+      <span v-text="author.userSignature"></span>
     </div>
     <div class="author-meta">
       <ul>
-        <li><span>文章</span><strong>{{author.articleNum}}</strong></li>
-        <li><span>点赞</span><strong>{{author.agreeNum}}</strong></li>
-        <li class="action-item"><span>评论</span><strong>{{author.commentsNum}}</strong></li>
-        <li class="action-item"><span>浏览</span><strong>{{author.readNum}}</strong></li>
+        <li><span>文章</span><strong>{{author.thumbupSum}}</strong></li>
+        <li><span>点赞</span><strong>{{author.thumbupSum}}</strong></li>
+        <li class="action-item"><span>评论</span><strong>{{author.commentSum}}</strong></li>
+        <li class="action-item"><span>浏览</span><strong>{{author.visitSum}}</strong></li>
       </ul>
     </div>
+    <div class="clear-fix"></div>
   </div>
 </template>
 
@@ -37,12 +38,11 @@
     },
     methods: {
       getAuthor(){
-        this.axios('/getAuthorInfo').then(res=>{
+        this.axios('/author/userDto/1').then(res=>{
           console.log(res);
-          let data = res.data;
-          if(data.code == 200){
-            this.author = data.data;
-          }
+         if(res.data.code == 0){
+          this.author = res.data.data;
+         }
         })
       }
     },
@@ -54,10 +54,11 @@
 <style scoped>
   .author {
     width: 20rem;
-    height: 22.2rem;
+    height: 20.7rem;
     text-align: center;
     box-shadow: 0px 2px 5px rgb(199, 198, 198);
     background: #fff;
+    border-radius: 2px;
   }
 
   .author-header {
@@ -84,6 +85,7 @@
     height: 6rem;
     border-radius: 50%;
     overflow: hidden;
+    background: #eee;
   }
 
   .box-img img {

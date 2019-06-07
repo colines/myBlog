@@ -1,65 +1,65 @@
 <template>
   <div class="content">
     <div class="message-list">
-      <ul>
-        <li>
-          <div class="message">
-            <p>
-              <span class="nickName">colines：</span>
-              <span>发表于</span>
-              <span class="time">2019-05-15 15:59</span>
-            </p>
-            <p>
-              <span>
-                因为悦己，所以轻欢！
-              </span>
-            </p>
-          </div>
-        </li>
-        <li>
-          <div class="message">
-            <p>
-              <span class="nickName">colines：</span>
-              <span>发表于</span>
-              <span class="time">2019-05-15 15:59</span>
-            </p>
-            <p>
-              <span>
-                因为悦己，所以轻欢！ 因为悦己，所以轻欢！
-              </span>
-            </p>
-          </div>
-        </li>
-      </ul>
+      <a-comment v-for="(item,index) in messageList" :key="index" class="comment">
+        <a slot="author">{{Utils.html_decode(item.userName)}}</a>
+        <a-avatar
+          :src="item.imageUrl"
+          slot="avatar" />
+        <a-tooltip slot="content" :title="item.guestbookContent">
+          <span class="user-words">
+            {{Utils.html_decode(item.guestbookContent)}}
+          </span>
+        </a-tooltip>
+        <a-tooltip slot="datetime" :title="moment(item.updateTime).format('YYYY-MM-DD HH:mm:ss')">
+          <span>{{moment(item.updateTime).fromNow()}}</span>
+        </a-tooltip>
+      </a-comment>
+      <div class="comment-bottom">
+        <div v-if="!isLastPage">
+          <a-spin v-if="loadingMore" />
+          <a-button v-else @click="onLoadMore" >加载更多</a-button>
+        </div>
+        <div v-else><p style="color: #666;margin-top: 4rem;">我是有底线的</p></div>
+      </div>
     </div>
-    <div class="pages">
+    <!-- <div class="pages">
       <ul>
         <li @click="pagePre">
-          <span class="page-item" :class="currentPage == 1 ? disabled :''">上一页</span>
+          <span class="page-item" :class="currentPage == 1 ? disabled :''">pre</span>
         </li>
         <li v-for="(item,index) in endPage" @click="changeCurrent(item)" v-show="item >= startPage">
           <span class="page-item" :class="index == pageIndex ? activeClass : ''">{{item}}</span>
         </li>
         <li @click="pageNext">
-          <span class="page-item" :class="currentPage == pages ? disabled :''">下一页</span>
+          <span class="page-item" :class="currentPage == pages ? disabled :''">next</span>
         </li>
       </ul>
-    </div>
-    <div class="clear-fix"></div>
+    </div> -->
   </div>
 </template>
 
 <script>
   export default {
+    created() {
+      this.getMessageList();
+      this.$EventBus.$on('addGuestBook',(gusestBook)=>{
+        this.addGuestBook(gusestBook);
+      })
+    },
     data() {
       return {
         pageIndex: 0,
         pages: 8,
         pageNum: 5,
         currentPage: 1,
+        lastPage:'',
         startPage: 1,
         activeClass: 'active',
-        disabled: 'disabled'
+        disabled: 'disabled',
+        loadingMore:false,
+        messageList:[],
+        isLastPage:false,
       }
     },
     computed: {
@@ -73,6 +73,27 @@
       }
     },
     methods: {
+      addGuestBook(gusestBook){
+        this.messageList.unshift(gusestBook);
+      },
+      onLoadMore(){
+        this.loadingMore = true;
+        if(this.currentPage == this.lastPage){
+          this.isLastPage = true;
+        }else{
+          this.currentPage++;
+          this.getMessageList();
+        }
+      },
+      getMessageList(){
+        this.axios.get('/user/guestBook?pageNum='+this.currentPage).then(res=>{
+            if(res.data.code == 0){
+              this.loadingMore = false;
+              this.lastPage = res.data.data.lastPage;
+              this.messageList = this.messageList.concat(res.data.data.list);
+            }
+          })
+      },
       changeCurrent(item) {
         this.pageIndex = item - 1;
         this.currentPage = item;
@@ -105,7 +126,7 @@
 
 <style scoped>
   .content {
-    margin-bottom: 1.5rem;
+    padding-bottom: 1.55rem;
   }
 
   .message-list ul li {
@@ -166,7 +187,14 @@
     cursor: no-drop;
     background-color: #eee !important;
     color: #666 !important;
-    border:1px solid #eee !important;
+    border: 1px solid #eee !important;
+  }
+  .comment{
+    margin: 1rem 0;
+  }
+  .comment-bottom{
+    width: 100%;
+    text-align: center;
   }
 
   @media screen and (max-width:980px) {

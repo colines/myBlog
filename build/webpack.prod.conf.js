@@ -7,9 +7,6 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const {
-//   SkeletonPlugin
-// } = require('page-skeleton-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -84,11 +81,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
-    // new SkeletonPlugin({
-    //   pathname: path.resolve(__dirname, `${customPath}`), // the path to store shell file
-    //   staticDir: path.resolve(__dirname, './dist'), // the same as the `output.path`
-    //   routes: ['/', '/leavewords'], // Which routes you want to generate skeleton screen
-    // }),
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting

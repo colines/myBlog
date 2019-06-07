@@ -10,14 +10,14 @@
           <nav class="nav-content">
             <ul class="nav-list">
               <li class="li-first">
-                <div class="phone-show" @click="navListToggle" >
+                <div class="phone-show" @click="navListToggle">
                   <span class="nav-title">{{navTitle}}</span>
                   <span class="iconfont">&#xe771;</span>
                 </div>
-                <ul class="phone-hide" :class="phoneHideFlag == true ? phoneHideClass : ''">
-                  <li class="nav-item" v-for="(item , index) in navList" :key="item.title"
-                    @click="changeNavColor(index,item.title)">
-                    <a v-text="item.title" :class="navIndex == index ? colorStyle : ''"></a>
+                <ul class="phone-hide" :class="phoneHide ? phoneHideClass : ''">
+                  <li class="nav-item" v-for="(item , index) in categoryList" :key="item.categoryId"
+                    @click="getArticleListByCategotyId(index,item.categoryId,item.categoryName)">
+                    <a v-text="item.categoryName" :class="navIndex == index ? colorStyle : ''"></a>
                   </li>
                 </ul>
               </li>
@@ -28,8 +28,8 @@
                 </div>
               </li>
               <li class="message nav-item">
-                <span class="iconfont">&#xe642;</span>
-                <router-link to="/leavewords" target="_blank">留言本</router-link>
+                <span class="iconfont" @click="isLeaveWords">&#xe642;</span>
+                <span class="leavewords" @click="isLeaveWords">留言本</span>
               </li>
             </ul>
           </nav>
@@ -41,35 +41,79 @@
 
 <script>
   export default {
+    created() {
+      this.getCategory();
+    },
+    mounted() {
+      if(this.screenWidth < 980)
+      this.phoneHide  = true;
+      window.addEventListener('resize', this.throttle(this.resizeHandle, 100))
+    },
     data() {
       return {
-        navList: [{
-          src: '/',
-          title: '首页'
-        }, {
-          src: '/',
-          title: '前端'
-        }, {
-          src: '/',
-          title: '后端'
-        }, {
-          src: '/',
-          title: '项目总结'
-        }],
+        categoryList: [],
+        categoryType: 0,
+        categoryId: '',
+        articleType: 2,
         navIndex: 0,
+        isguestbook:false,
         colorStyle: 'colorStyle',
-        navTitle:'首页',
-        phoneHideFlag:false,
-        phoneHideClass:'phoneHideClass'
+        navTitle: '首页',
+        phoneHide: false,
+        phoneHideClass: 'phoneHideClass',
+        screenWidth: document.body.clientWidth, //浏览器宽度
+
       }
     },
     methods: {
-      changeNavColor(index,title) {
+      throttle(fn, delay) { //防节流函数
+        let prev = Date.now()
+        return function () {
+          let now = Date.now()
+          if (now - prev > delay) {
+            fn()
+            prev = Date.now()
+          }
+        }
+      },
+      resizeHandle() {
+        this.screenWidth = document.body.clientWidth || document.documentElement.clientWidth;
+        if (this.screenWidth < 980)
+          this.phoneHide = true;
+        else
+          this.phoneHide = false;
+      },
+      getArticleListByCategotyId(index, id, title) {
         this.navIndex = index;
         this.navTitle = title;
+        this.categoryId = id;
+        this.isguestbook = false;
+        this.$store.commit('setCategoryType', index);
+        this.$store.commit('setCategoryId', id);
+        this.$EventBus.$emit('getTaglist', index);
+
       },
-      navListToggle(){
-        this.phoneHideFlag = !this.phoneHideFlag;
+      isLeaveWords(){
+        let routeData = this.$router.resolve({
+          path: "/guestbook",
+        });
+        window.open(routeData.href, '_blank');
+        // this.$store.commit('setIsContent',false);
+      },
+      navListToggle() {
+        this.phoneHide = !this.phoneHide;
+      },
+      getCategory() {
+        this.axios.get('/author/categoryDto/category?state=1&sort=' + this.articleType).then(res => {
+          if (res.data.code == 0) {
+            this.categoryList = res.data.data;
+            let item = {
+              categoryId: 1,
+              categoryName: '首页'
+            }
+            this.categoryList.unshift(item);
+          }
+        })
       }
     },
 
@@ -78,7 +122,7 @@
 </script>
 
 <style scoped>
-  .header{
+  .header {
     position: fixed;
     top: 0;
     left: 0;
@@ -87,12 +131,14 @@
     height: 5rem;
     z-index: 100;
     background: #fff;
-    border-bottom: 1px solid rgb(245, 242, 242);
+    border-bottom: 1px solid #eee;
   }
+
   .header-box {
     position: relative;
     height: 5rem;
   }
+
   .content {
     position: relative;
     margin: 0 auto;
@@ -150,7 +196,7 @@
     cursor: pointer;
   }
 
-  .phone-show .nav-title{
+  .phone-show .nav-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -179,7 +225,7 @@
     color: rgb(102, 190, 231);
   }
 
-  .nav-item a {
+  .nav-item a,.leavewords {
     color: #71777c;
     font-size: 1.33rem;
   }
@@ -204,13 +250,13 @@
   }
 
   .input-search .iconfont {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-right: 1rem;
   }
 
   .input {
     border: none;
-    width: 10rem;
+    width: 12rem;
     padding: .6rem 1rem;
     box-shadow: none;
     outline: none;
@@ -227,7 +273,7 @@
       display: block;
       position: absolute;
       left: -15px;
-      top: -6px;
+      top: -7px;
       background-color: #fff;
       z-index: 99;
       margin-left: -10px;
@@ -265,17 +311,17 @@
       font-size: 1.33rem;
     }
 
-    .nav-item a{
-      font-size: 1.33rem ;
+    .nav-item a {
+      font-size: 1.33rem;
     }
 
     .name {
       display: block;
-      margin-right: 2rem!important;
+      margin-right: 2rem !important;
     }
 
     .input {
-      width: 6rem;
+      width: 8rem;
     }
 
     .logo {
@@ -287,20 +333,22 @@
     }
 
     .message .iconfont {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
     }
 
-    .message a {
+    .message .leavewords {
       font-size: 1.33rem !important;
     }
   }
+
   @media screen and (max-width:700px) {
-    .name{
+    .name {
       display: none;
     }
   }
+
   @media screen and (max-width:500px) {
-    .phone-show{
+    .phone-show {
       margin-left: 1rem;
     }
   }
@@ -325,10 +373,11 @@
       justify-content: flex-start;
       padding: 0;
       width: 5.66rem;
+      margin-top: -1px;
     }
 
     .phone-hide {
-      display: block!important;
+      display: block !important;
       background-color: #fff;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
       border: 1px solid rgba(177, 180, 185, .45);
@@ -336,8 +385,9 @@
       background: #fff;
       z-index: 99;
     }
-    .nav-item a{
-      font-size: 1.33rem ;
+
+    .nav-item a {
+      font-size: 1.33rem;
     }
 
     .name {
@@ -348,12 +398,20 @@
       padding-left: 1rem;
     }
 
-    .search {
+    .input {
+      width: 6rem;
+    }
+
+    .message .leavewords {
       display: none;
+    }
+
+    .message .iconfont {
+      font-size: 2rem;
     }
   }
 
-  .phoneHideClass{
+  .phoneHideClass {
     display: none !important;
   }
 

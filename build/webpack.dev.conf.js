@@ -7,9 +7,6 @@ const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const {
-//   SkeletonPlugin
-// } = require('page-skeleton-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
@@ -60,12 +57,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
-    // new SkeletonPlugin({
-    //   pathname: path.resolve(__dirname, `${customPath}`), // the path to store shell file
-    //   staticDir: path.resolve(__dirname, './dist'), // the same as the `output.path`
-    //   routes: ['/', '/leavewords'], // Which routes you want to generate skeleton screen
-    // }),
-    // copy custom static assets
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),

@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="author-img">
-      <img src="../../../../../static/Davi.jpg" alt="">
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558847245158&di=7d375f370cd1fa2eab45a3b59b0baa1c&imgtype=0&src=http%3A%2F%2Flkker-10041312.file.myqcloud.com%2FImages%2F201902%2FgVaG15512595824319.jpg" alt="">
     </div>
     <div class="author-info">
       <h1>留言本</h1>
@@ -31,8 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding:.8rem 0 1rem .8rem;
-    /* border-bottom: 1px solid hsla(0, 0%, 59.2%, .1); */
+    padding:1rem 0;
   }
 
   .author-img {
@@ -50,10 +49,12 @@
   .author-info h1 {
     font-size: 1.6rem;
     font-weight: bold;
-    margin-top: -1rem;
-    height: 3.5rem;
-    line-height: 3.5rem;
+    height: 3rem;
+    line-height: 3rem;
     color: #000;
+  }
+  .author-info p{
+    line-height: 1.5;
   }
 
   .author-info p span{
