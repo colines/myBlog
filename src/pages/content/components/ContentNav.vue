@@ -9,11 +9,12 @@
         </ul>
       </nav>
       <nav class="nav">
-        <ul>
+        <ul v-if="$store.state.isSort">
           <li v-for="(item,index) in navList" :class="navIndex == index ? colorStyle : ''">
             <span v-text="item.type" @click="getContenList(index)"></span>
           </li>
         </ul>
+        <p v-else>搜索结果</p>
       </nav>
     </div>
     <content-list :contentList="contentList"></content-list>
@@ -28,11 +29,14 @@
       ContentList
     },
     created() {
-      this.getContenList(0);
+      this.getContenList();
       window.addEventListener('scroll', this.debounce(this.isScrollToBottom, 100));
       this.$EventBus.$on('getTaglist', (index) => {
         this.getTagList(index);
       });
+      this.$EventBus.$on('getArticleListBykeywords',(keywords)=>{
+        this.getArticleListBykeywords.call(this,keywords);
+      })
     },
     data() {
       return {
@@ -64,7 +68,7 @@
       tagChange(tagId, index) {
         this.tagIndex = index;
         this.tagId = tagId;
-        this.getContenList(0);
+        this.getContenList();
       },
       getTagList(index) {
         if (index != 0) {
@@ -87,7 +91,7 @@
                 this.categoryId = this.$store.state.categoryId;
                 this.status = 1;
                 this.currentPage = 1;
-                this.getContenList(0);
+                this.getContenList();
               }
             })
         } else {
@@ -97,10 +101,10 @@
           this.currentPage = 1;
           this.tagList = [];
           this.$store.commit('setCategoryType', 0);
-          this.getContenList(0);
+          this.getContenList();
         }
       },
-      getContenList(index) {
+      getContenList(index = 0) {
         this.showTip = false;
         this.navIndex = index;
         this.status = index + 1;
@@ -115,7 +119,6 @@
       getData() {
         this.axios.get('/user/articleDto?categoryId=' + this.categoryId + '&tagId=' + this.tagId + '&sort=' + this
           .status + '&pageNum=' + this.currentPage).then(res => {
-          // console.log(res);
           if (res.data.code == 0) {
             this.isRequest = true;
             let data = res.data.data;
@@ -133,6 +136,22 @@
           }
         })
 
+      },
+      getArticleListBykeywords(keywords){
+        this.isRequest = false;
+        this.axios.get('/user/search?keyword='+keywords+'&flag=2').then((res)=>{
+          let data = res.data;
+          if(data.code == 0){
+            this.$store.commit('setIsSort', false);
+            if(data.data.length){
+              this.contentList = data.data;
+              this.showTip = false;
+            }else{
+              this.contentList = [];
+              this.showTip = true;
+            }
+          }
+        })
       },
       showMore() {
         if (this.currentPage == this.lastPage) {

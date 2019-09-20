@@ -7,7 +7,7 @@
         <ul>
           <li v-for="item in linksList" :key="item.urlId">
             <div class="other-logo" @click="goLinks(item.urlLink)">
-              <img :src="item.imageUrl" alt="item.urlName">
+              <img :src="item.imageUrl">
             </div>
             <div>
               <a :href="item.urlLink" v-text="item.urlName" target="_blank"></a>

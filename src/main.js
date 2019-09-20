@@ -39,8 +39,9 @@ Vue.use(Tooltip);
 // Vue.prototype.$qs = qs
 Vue.prototype.$message = message
 Vue.prototype.$EventBus = new Vue()
-axios.defaults.baseURL = 'http://10.79.3.57:8080/myblog'
-Vue.prototype.home = 'http://localhost:8080/#/'
+// axios.defaults.baseURL = 'http://10.79.3.57:80/myblog'
+axios.defaults.baseURL = 'www.deschen.cn:8081/myblog'
+Vue.prototype.home = 'www.deschen.cn:8081/#/'
 // axios.defaults.baseURL = 'http://172.21.105.48:8080/myblog'
 // axios.defaults.baseURL = 'http://10.5.13.35:8080/myblog'
 /* eslint-disable no-new */

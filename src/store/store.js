@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     categoryId: 1,
     articleId: '',
     isContent:true,//是否加载文章列表
+    isSort:true,//是否按照热门 最新 评论排序
   },
   mutations: {
     setCategoryType(state, data) {
@@ -21,6 +22,9 @@ const store = new Vuex.Store({
     },
     setIsContent(state,data){
       state.isContent = data;
+    },
+    setIsSort(state,data){
+      state.isSort = data;
     }
   }
 })

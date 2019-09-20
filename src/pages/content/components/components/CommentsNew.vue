@@ -46,7 +46,6 @@
     methods: {
       getCommentsList() {
         this.axios.get('/user/guestBook?pageNum=1').then(res => {
-          console.log(res);
           if (res.data.code == 0) {
             this.commentsList = res.data.data.list;
           }

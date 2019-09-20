@@ -23,8 +23,8 @@
               </li>
               <li class="search nav-item">
                 <div class="input-search">
-                  <input type="text" class="input" placeholder="关键词">
-                  <span class="iconfont">&#xe615;</span>
+                  <input type="text" class="input" v-model="keywords" placeholder="关键词" @keyup.enter="getArticleListBykeywords">
+                  <span class="iconfont" @click="getArticleListBykeywords">&#xe615;</span>
                 </div>
               </li>
               <li class="message nav-item">
@@ -62,6 +62,7 @@
         phoneHide: false,
         phoneHideClass: 'phoneHideClass',
         screenWidth: document.body.clientWidth, //浏览器宽度
+        keywords:'',
 
       }
     },
@@ -114,6 +115,9 @@
             this.categoryList.unshift(item);
           }
         })
+      },
+      getArticleListBykeywords(){
+        this.$EventBus.$emit('getArticleListBykeywords',this.Utils.html_encode(this.keywords));
       }
     },
 

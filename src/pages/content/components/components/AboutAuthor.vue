@@ -39,7 +39,6 @@
     methods: {
       getAuthor(){
         this.axios('/author/userDto/1').then(res=>{
-          console.log(res);
          if(res.data.code == 0){
           this.author = res.data.data;
          }
